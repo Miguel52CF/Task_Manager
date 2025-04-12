@@ -39,7 +39,7 @@
                 Explora todas tus tareas registradas, su estado, subtareas y
                 detalles organizados.
               </p>
-              <a href="#" class="btn btn-outline-primary">Ir a Tareas</a>
+              <a href="/tasks" class="btn btn-outline-primary">Ir a Tareas</a>
             </div>
           </div>
         </div>

@@ -1,5 +1,5 @@
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> <%@ page
-language="java" contentType="text/html; charset=UTF-8" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %> 
+<%@ page language="java" contentType="text/html; charset=UTF-8" %>
 <link
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
   rel="stylesheet"
@@ -8,12 +8,6 @@ language="java" contentType="text/html; charset=UTF-8" %>
   rel="stylesheet"
   href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
 />
-<!-- CSS -->
-<link
-  rel="stylesheet"
-  href="https://cdn.datatables.net/2.2.2/css/dataTables.dataTables.css"
-/>
-
 <style>
   body {
     min-height: 100vh;
@@ -39,7 +33,7 @@ language="java" contentType="text/html; charset=UTF-8" %>
     <div class="d-flex align-items-center ms-auto">
       <ul class="navbar-nav me-3">
         <li class="nav-item">
-          <a class="nav-link" href="/tareas">Ver Tareas</a>
+          <a class="nav-link" href="/tasks">Ver Tareas</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" href="/taskTypes">Crear Categorías</a>
