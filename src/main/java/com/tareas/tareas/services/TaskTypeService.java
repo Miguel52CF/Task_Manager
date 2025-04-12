@@ -16,4 +16,11 @@ public class TaskTypeService extends BaseService<TaskType> {
     this.taskTypeRepository = taskTypeRepository;
   }
 
+  public String delete(Long id) {
+    TaskType taskType = findById(id);
+    taskType.setActive(false);
+    taskType = save(taskType);
+    return "Delete successful";
+  }
+
 }

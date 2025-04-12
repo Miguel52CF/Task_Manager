@@ -4,10 +4,11 @@
   href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
   rel="stylesheet"
 />
-<link
-  rel="stylesheet"
-  href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"
-/>
+<!-- Use a newer version (6.4.2 is latest as of Oct 2023) -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+<!-- SweetAlert2 -->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <style>
   body {
     min-height: 100vh;
@@ -45,8 +46,7 @@
       <button
         id="themeToggle"
         class="theme-toggle-btn"
-        aria-label="Cambiar modo"
-      >
+        aria-label="Cambiar modo">
         🌞
       </button>
     </div>

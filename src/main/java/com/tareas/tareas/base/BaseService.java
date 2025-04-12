@@ -41,11 +41,4 @@ public abstract class BaseService<T> {
     return findById(id);
   }
 
-  public String delete(Long id) {
-    T object = findById(id);
-    BeanUtils.copyProperties(false, object, "active");
-    save(object);
-    return String.format("%s with id %d deleted successfully.", modelType.getSimpleName(), id);
-  }
-
 }

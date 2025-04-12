@@ -1,31 +1,67 @@
 package com.tareas.tareas.controllers;
 
-import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tareas.tareas.models.TaskType;
+import com.tareas.tareas.services.TaskTypeService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/taskTypes")
 public class TaskTypeController {
 
-  @GetMapping("")
-  public String listarTipos(Model model) {
-    // Lista simulada de tipos de tarea
-    List<TaskType> tipos = Arrays.asList(
-        new TaskType(1L, "Urgente", "bi-exclamation-circle"),
-        new TaskType(2L, "Normal", "bi-list-task"),
-        new TaskType(3L, "Baja Prioridad", "bi-hourglass-split"),
-        new TaskType(4L, "Reunión", "bi-people"),
-        new TaskType(5L, "Entrega", "bi-box-arrow-down"));
+  private final TaskTypeService taskTypeService;
 
-    model.addAttribute("taskTypes", tipos);
+  public TaskTypeController(TaskTypeService taskTypeService) {
+    this.taskTypeService = taskTypeService;
+  }
+
+  @GetMapping("")
+  public String index(Model model) {
+    List<TaskType> categories = taskTypeService.findAll();
+    model.addAttribute("taskTypes", categories);
     return "TaskType/index.jsp";
+  }
+
+  @GetMapping("all")
+  public ResponseEntity<Object> getALl() {
+    List<TaskType> categories = taskTypeService.findAll();
+    return ResponseEntity.ok(categories);
+  }
+
+  @PostMapping("/new")
+  public ResponseEntity<?> createTaskType(@Valid @RequestBody TaskType taskType) {
+    try {
+      TaskType newTaskType = new TaskType();
+      newTaskType.setName(taskType.getName().trim());
+      newTaskType.setIcon(taskType.getIcon().trim());
+
+      taskTypeService.save(newTaskType);
+
+      return ResponseEntity.status(HttpStatus.CREATED)
+          .body("Tipo de tarea creado exitosamente.");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error al guardar el tipo de tarea: " + e.getMessage());
+    }
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<Object> delete(@PathVariable Long id) {
+    String response = taskTypeService.delete(id);
+    return ResponseEntity.ok(response);
   }
 
 }
