@@ -17,12 +17,24 @@
   const currentTheme = localStorage.getItem("theme") || "light";
   root.setAttribute("data-bs-theme", currentTheme);
   themeToggle.textContent = currentTheme === "dark" ? "🌞" : "🌙";
+  updateTomSelectTheme(currentTheme); // Aplicar tema inicial
 
   themeToggle.addEventListener("click", () => {
-    const newTheme =
-      root.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
+    const newTheme = root.getAttribute("data-bs-theme") === "dark" ? "light" : "dark";
     root.setAttribute("data-bs-theme", newTheme);
     themeToggle.textContent = newTheme === "dark" ? "🌞" : "🌙";
     localStorage.setItem("theme", newTheme);
+    updateTomSelectTheme(newTheme); // Actualizar Tom Select
   });
+
+  // Función para actualizar Tom Select
+  function updateTomSelectTheme(theme) {
+    document.querySelectorAll('.ts-wrapper').forEach(wrapper => {
+      if (theme === "dark") {
+        wrapper.classList.add("ts-dark");
+      } else {
+        wrapper.classList.remove("ts-dark");
+      }
+    });
+  }
 </script>

@@ -12,4 +12,9 @@ public class HomeController {
   public String Home() {
     return "index.jsp";
   }
+
+  @GetMapping("Board")
+  public String Board(){
+    return "Task/board.jsp";
+  }
 }

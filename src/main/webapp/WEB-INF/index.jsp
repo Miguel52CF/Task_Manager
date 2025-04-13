@@ -63,7 +63,7 @@
                 Visualiza tus tareas en formato de tablero Kanban, ideal para
                 organizar por estado.
               </p>
-              <a href="#" class="btn btn-outline-primary">Ver Board</a>
+              <a href="/Board" class="btn btn-outline-primary">Ver Board</a>
             </div>
           </div>
         </div>

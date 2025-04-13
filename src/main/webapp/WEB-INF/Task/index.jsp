@@ -1,5 +1,5 @@
-<%@ page language="java" contentType="text/html; charset=UTF-8" %> 
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ page language="java" contentType="text/html; charset=UTF-8" %> <%@ taglib
+uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <!DOCTYPE html>
 <html lang="es" data-bs-theme="light">
   <head>
@@ -15,6 +15,18 @@
       .table td {
         vertical-align: middle;
       }
+      .pagination li {
+        margin: 0 2px;
+      }
+      .pagination li a {
+        border-radius: 6px !important;
+        padding: 4px 10px !important;
+        color: #0d6efd;
+      }
+      .pagination li.active a {
+        background-color: #0d6efd;
+        color: white !important;
+      }
     </style>
   </head>
   <body>
@@ -26,87 +38,49 @@
           <h2 class="mb-0">Tareas</h2>
         </div>
         <div class="card-body">
-          <div class="table-responsive">
+          <div id="taskListWrapper">
             <div class="d-flex justify-content-between mb-3">
-              <div class="search-box">
-                <input
-                  type="text"
-                  id="searchInput"
-                  class="form-control"
-                  placeholder="Buscar tareas..."
-                  style="max-width: 300px"
-                />
-              </div>
-              <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#crearTareaModal">
+              <input
+                class="search form-control"
+                placeholder="Buscar..."
+                style="max-width: 300px"
+              />
+              <button
+                class="btn btn-primary"
+                data-bs-toggle="modal"
+                data-bs-target="#crearTareaModal"
+              >
                 <i class="fas fa-plus-circle me-2"></i>Nueva Tarea
               </button>
             </div>
-            <table
-              id="tasksTable"
-              class="table table-hover table-bordered align-middle"
-            >
-              <thead class="table-light">
-                <tr>
-                  <th>Título</th>
-                  <th>Descripción</th>
-                  <th>Estado</th>
-                  <th>Tipo</th>
-                  <th>Subtareas</th>
-                  <th class="text-center" style="width: 120px">Acciones</th>
-                </tr>
-              </thead>
-              <tbody>
-                <c:forEach var="task" items="${tasks}">
+
+            <div class="table-responsive">
+              <table class="table table-hover table-bordered align-middle">
+                <thead class="table-light">
                   <tr>
-                    <td>${task.title}</td>
-                    <td>${task.task}</td>
-                    <td>
-                      <c:set var="statusColor" value="style ='background-color: ${task.status.color()}'" />
-                      <span class="badge" ${statusColor}>
-                        ${task.status.description()}
-                      </span>
-                    </td>                    
-                    <td>${task.taskType.name}</td>
-                    <td>
-                      <c:if test="${not empty task.subTasks}">
-                        <ul class="mb-0">
-                          <c:forEach var="sub" items="${task.subTasks}">
-                            <li>${sub.title}</li>
-                          </c:forEach>
-                        </ul>
-                      </c:if>
-                      <c:if test="${empty task.subTasks}">
-                        <em class="text-muted">Sin subtareas</em>
-                      </c:if>
-                    </td>
-                    <td class="text-center action-buttons">
-                      <div class="btn-group btn-group-sm" role="group">
-                        <button
-                          type="button"
-                          class="btn btn-outline-primary"
-                          title="Editar"
-                        >
-                          <i class="fas fa-edit"></i>
-                        </button>
-                        <button
-                          type="button"
-                          class="btn btn-outline-danger"
-                          title="Eliminar"
-                        >
-                          <i class="fas fa-trash-alt"></i>
-                        </button>
-                      </div>
-                    </td>
+                    <th><span class="name">Título</span></th>
+                    <th><span class="description">Descripción</span></th>
+                    <th><span class="status">Estado</span></th>
+                    <th><span class="type">Tipo</span></th>
+                    <th><span class="subtasks">Subtareas</span></th>
+                    <th class="text-center" style="width: 120px">Acciones</th>
                   </tr>
-                </c:forEach>
-              </tbody>
-            </table>
+                </thead>
+                <tbody class="list" id="tasksTableList">
+                  <!-- Will be filled dynamically -->
+                </tbody>
+              </table>
+            </div>
+
+            <ul class="pagination"></ul>
           </div>
         </div>
       </div>
     </div>
 
-    <%@ include file="./modalCreate.jsp" %> 
-    <%@ include file="../Components/footer.jsp" %>
+    <%@ include file="./modalCreate.jsp" %> <%@ include
+    file="../Components/footer.jsp" %>
+    <!-- Script personalizado -->
+    <script src="${pageContext.request.contextPath}/js/Task.js"></script>
   </body>
 </html>

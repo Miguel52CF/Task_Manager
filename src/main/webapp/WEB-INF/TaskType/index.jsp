@@ -6,10 +6,7 @@
   <meta charset="UTF-8" />
   <title>Tipos de Tareas</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-
-  <!-- SweetAlert -->
-  <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-
+  
   <style>
     .action-buttons .btn {
       width: 40px;

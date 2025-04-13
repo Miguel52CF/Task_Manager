@@ -3,8 +3,8 @@ package com.tareas.tareas.controllers;
 import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -17,7 +17,12 @@ import com.tareas.tareas.models.TaskType;
 public class TaskController {
 
   @GetMapping("")
-  public String listarTareas(Model model) {
+  public String listarTareas() {
+    return "Task/index.jsp";
+  }
+
+  @GetMapping("/all")
+  public ResponseEntity<Object> getAll() {
     TaskType urgente = new TaskType(1L, "Urgente", "bi-exclamation-circle");
     TaskType normal = new TaskType(2L, "Normal", "bi-list-task");
     TaskType baja = new TaskType(3L, "Baja Prioridad", "bi-hourglass-split");
@@ -102,9 +107,8 @@ public class TaskController {
     tarea1.setSubTasks(Arrays.asList(tarea3));
     tarea5.setSubTasks(Arrays.asList(st1, st2, st3, st4, st5));
 
-    List<Task> tareas = Arrays.asList(tarea1, tarea2, tarea3, tarea4, tarea5);
-    model.addAttribute("tasks", tareas);
-
-    return "Task/index.jsp";
+    List<Task> tareas = Arrays.asList(tarea1, tarea2, tarea3, tarea4, tarea5,st1, st2, st3, st4, st5);
+    return ResponseEntity.ok(tareas);
   }
+
 }
