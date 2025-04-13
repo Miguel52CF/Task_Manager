@@ -9,8 +9,7 @@ document.addEventListener("DOMContentLoaded", function () {
   document
     .getElementById("crearCategoriaModal")
     .addEventListener("hidden.bs.modal", function () {
-      document.getElementById("crearTaskTypeForm").reset();
-      document.getElementById("selectedEmojiPreview").textContent = "😊";
+      resetTaskTypeForm();
     });
 });
 
@@ -67,10 +66,20 @@ async function initEmojiPicker() {
   });
 }
 
+// Función para resetear el formulario
+function resetTaskTypeForm() {
+  document.getElementById("crearTaskTypeForm").reset();
+  document.getElementById("selectedEmojiPreview").textContent = "😊";
+  document.getElementById("taskTypeId").value = "";
+  document.getElementById("crearCategoriaModalLabel").textContent =
+    "Crear nueva categoría";
+}
+
 // Submit form to create new task type
 async function submitTaskTypeForm(event) {
   event.preventDefault();
 
+  const id = document.getElementById("taskTypeId").value;
   const nombre = document.getElementById("nombreCategoria").value.trim();
   const icono = document.getElementById("iconoCategoria").value.trim();
 
@@ -81,14 +90,16 @@ async function submitTaskTypeForm(event) {
 
   const taskTypeDTO = { name: nombre, icon: icono };
   const submitBtn = event.target.querySelector('button[type="submit"]');
+  const url = id ? `/taskTypes/${id}` : "/taskTypes/new";
+  const method = id ? "PUT" : "POST";
 
   try {
     submitBtn.disabled = true;
     submitBtn.innerHTML =
       '<span class="spinner-border spinner-border-sm" role="status" aria-hidden="true"></span> Guardando...';
 
-    const response = await fetch("/taskTypes/new", {
-      method: "POST",
+    const response = await fetch(url, {
+      method: method,
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(taskTypeDTO),
     });
@@ -106,14 +117,13 @@ async function submitTaskTypeForm(event) {
 
     Swal.fire({
       title: "¡Guardado!",
-      text: "La categoría fue creada exitosamente.",
+      text: id
+        ? "La categoría fue actualizada exitosamente."
+        : "La categoría fue creada exitosamente.",
       icon: "success",
       confirmButtonText: "Aceptar",
     }).then(() => {
-      // Esperar 3 segundos antes de recargar
-      setTimeout(() => {
-        window.location.reload();
-      }, 3000);
+      window.location.reload();
     });
   } catch (error) {
     console.error("Error:", error);
@@ -123,6 +133,7 @@ async function submitTaskTypeForm(event) {
     submitBtn.textContent = "Guardar";
   }
 }
+
 // Load and render task types
 async function loadTaskTypes() {
   try {
@@ -131,9 +142,6 @@ async function loadTaskTypes() {
 
     const tbody = document.getElementById("taskTypeList");
     tbody.innerHTML = "";
-
-    console.log("debug", data);
-    
 
     data.forEach((type) => {
       const tr = document.createElement("tr");
@@ -144,7 +152,7 @@ async function loadTaskTypes() {
         </td>
         <td class="text-center action-buttons">
           <div class="btn-group btn-group-sm" role="group">
-            <button class="btn btn-outline-primary" title="Editar">
+            <button class="btn btn-outline-primary" onclick="openEditModal(${type.id})" title="Editar">
               <i class="fas fa-edit"></i>
             </button>
             <button class="btn btn-outline-danger" onclick="deleteTaskType(${type.id})" title="Eliminar">
@@ -231,5 +239,33 @@ async function deleteTaskType(id) {
       error.message || "Ocurrió un error al eliminar",
       "error"
     );
+  }
+}
+
+async function openEditModal(id) {
+  try {
+    const response = await fetch(`/taskTypes/${id}`);
+    if (!response.ok) throw new Error("Error al cargar el tipo de tarea");
+
+    const taskType = await response.json();
+
+    // Llenar el formulario con los datos
+    document.getElementById("taskTypeId").value = taskType.id;
+    document.getElementById("nombreCategoria").value = taskType.name;
+    document.getElementById("iconoCategoria").value = taskType.icon;
+    document.getElementById("selectedEmojiPreview").textContent = taskType.icon;
+
+    // Cambiar el título del modal
+    document.getElementById("crearCategoriaModalLabel").textContent =
+      "Editar categoría";
+
+    // Mostrar el modal
+    const modal = new bootstrap.Modal(
+      document.getElementById("crearCategoriaModal")
+    );
+    modal.show();
+  } catch (error) {
+    console.error("Error:", error);
+    Swal.fire("Error", error.message, "error");
   }
 }

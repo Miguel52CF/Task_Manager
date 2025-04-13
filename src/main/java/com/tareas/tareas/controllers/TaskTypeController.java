@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -35,10 +36,16 @@ public class TaskTypeController {
     return "TaskType/index.jsp";
   }
 
-  @GetMapping("all")
+  @GetMapping("/all")
   public ResponseEntity<Object> getALl() {
     List<TaskType> categories = taskTypeService.findAll();
     return ResponseEntity.ok(categories);
+  }
+
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getById(@PathVariable Long id) {
+    TaskType categorie = taskTypeService.findById(id);
+    return ResponseEntity.ok(categorie);
   }
 
   @PostMapping("/new")
@@ -62,6 +69,15 @@ public class TaskTypeController {
   public ResponseEntity<Object> delete(@PathVariable Long id) {
     String response = taskTypeService.delete(id);
     return ResponseEntity.ok(response);
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<?> updateTaskType(
+      @PathVariable Long id,
+      @RequestBody TaskType taskType) {
+
+    TaskType categorie = taskTypeService.update(id, taskType);
+    return ResponseEntity.ok(categorie);
   }
 
 }

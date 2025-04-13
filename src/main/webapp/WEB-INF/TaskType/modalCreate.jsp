@@ -3,6 +3,7 @@
     <div class="modal-dialog">
         <div class="modal-content">
             <form id="crearTaskTypeForm">
+                <input type="hidden" id="taskTypeId" name="id" value="">
                 <div class="modal-header">
                     <h5 class="modal-title" id="crearCategoriaModalLabel">
                         Crear nueva categoría
