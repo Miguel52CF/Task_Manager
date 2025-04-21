@@ -16,4 +16,11 @@ public class TaskService extends BaseService<Task> {
     this.taskRepository = taskRepository;
   }
 
+   public String delete(Long id) {
+    Task task = findById(id);
+    task.setActive(false);
+    task = save(task);
+    return "Delete successful";
+  }
+
 }

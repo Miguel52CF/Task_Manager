@@ -1,114 +1,115 @@
 package com.tareas.tareas.controllers;
 
-import java.util.Arrays;
 import java.util.List;
 
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.tareas.tareas.enums.TaskStatus;
 import com.tareas.tareas.models.Task;
-import com.tareas.tareas.models.TaskType;
+import com.tareas.tareas.services.TaskService;
+
+import jakarta.validation.Valid;
 
 @Controller
 @RequestMapping("/tasks")
 public class TaskController {
 
+  private final TaskService taskService;
+
+  public TaskController(TaskService taskService) {
+    this.taskService = taskService;
+  }
+
   @GetMapping("")
-  public String listarTareas() {
+  public String index() {
     return "Task/index.jsp";
   }
 
   @GetMapping("/all")
-  public ResponseEntity<Object> getAll() {
-    TaskType urgente = new TaskType(1L, "Urgente", "bi-exclamation-circle");
-    TaskType normal = new TaskType(2L, "Normal", "bi-list-task");
-    TaskType baja = new TaskType(3L, "Baja Prioridad", "bi-hourglass-split");
-
-    Task tarea1 = new Task();
-    tarea1.setId(1L);
-    tarea1.setTitle("Preparar informe");
-    tarea1.setTask("Redactar y revisar el informe de ventas mensual.");
-    tarea1.setStatus(TaskStatus.TODO);
-    tarea1.setTaskType(urgente);
-
-    Task tarea2 = new Task();
-    tarea2.setId(2L);
-    tarea2.setTitle("Reunión de equipo");
-    tarea2.setTask("Discutir los avances del sprint actual.");
-    tarea2.setStatus(TaskStatus.IN_PROGRESS);
-    tarea2.setTaskType(normal);
-
-    Task tarea3 = new Task();
-    tarea3.setId(3L);
-    tarea3.setTitle("Enviar reportes");
-    tarea3.setTask("Enviar reportes financieros a la gerencia.");
-    tarea3.setStatus(TaskStatus.COMPLETED);
-    tarea3.setTaskType(urgente);
-    tarea3.setParentTask(tarea1); // subtarea de tarea1
-
-    Task tarea4 = new Task();
-    tarea4.setId(4L);
-    tarea4.setTitle("Revisión de presupuesto");
-    tarea4.setTask("Verificar partidas del presupuesto 2025.");
-    tarea4.setStatus(TaskStatus.ON_HOLD);
-    tarea4.setTaskType(baja);
-
-    Task tarea5 = new Task();
-    tarea5.setId(5L);
-    tarea5.setTitle("Planificación del evento anual");
-    tarea5.setTask("Coordinar actividades, invitados y locación para el evento.");
-    tarea5.setStatus(TaskStatus.TODO);
-    tarea5.setTaskType(normal);
-
-    // Subtareas para tarea5
-    Task st1 = new Task();
-    st1.setId(6L);
-    st1.setTitle("Contactar proveedores");
-    st1.setTask("Enviar cotizaciones a posibles proveedores.");
-    st1.setStatus(TaskStatus.IN_PROGRESS);
-    st1.setTaskType(normal);
-    st1.setParentTask(tarea5);
-
-    Task st2 = new Task();
-    st2.setId(7L);
-    st2.setTitle("Diseñar material publicitario");
-    st2.setTask("Crear afiches, banners y publicaciones para redes.");
-    st2.setStatus(TaskStatus.TODO);
-    st2.setTaskType(baja);
-    st2.setParentTask(tarea5);
-
-    Task st3 = new Task();
-    st3.setId(8L);
-    st3.setTitle("Definir agenda");
-    st3.setTask("Establecer el cronograma del evento.");
-    st3.setStatus(TaskStatus.TODO);
-    st3.setTaskType(normal);
-    st3.setParentTask(tarea5);
-
-    Task st4 = new Task();
-    st4.setId(9L);
-    st4.setTitle("Invitar ponentes");
-    st4.setTask("Enviar invitaciones y confirmar participación.");
-    st4.setStatus(TaskStatus.ON_HOLD);
-    st4.setTaskType(normal);
-    st4.setParentTask(tarea5);
-
-    Task st5 = new Task();
-    st5.setId(10L);
-    st5.setTitle("Confirmar locación");
-    st5.setTask("Reservar el lugar del evento.");
-    st5.setStatus(TaskStatus.CANCELLED);
-    st5.setTaskType(urgente);
-    st5.setParentTask(tarea5);
-
-    tarea1.setSubTasks(Arrays.asList(tarea3));
-    tarea5.setSubTasks(Arrays.asList(st1, st2, st3, st4, st5));
-
-    List<Task> tareas = Arrays.asList(tarea1, tarea2, tarea3, tarea4, tarea5,st1, st2, st3, st4, st5);
-    return ResponseEntity.ok(tareas);
+  public ResponseEntity<List<Task>> getAllTasks() {
+    List<Task> tasks = taskService.findAll();
+    return ResponseEntity.ok(tasks);
   }
 
+  @GetMapping("/{id}")
+  public ResponseEntity<?> getTaskById(@PathVariable Long id) {
+    Task task = taskService.findById(id);
+    if (task == null) {
+      return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarea no encontrada.");
+    }
+    return ResponseEntity.ok(task);
+  }
+
+  @PostMapping("/new")
+  public ResponseEntity<?> createTask(@Valid @RequestBody Task task) {
+    try {
+      if (task.getStatus() == null) {
+        task.setStatus(TaskStatus.TODO);
+      }
+
+      // Manejar parentTask
+      if (task.getParentTaskId() != null) {
+        Task parent = taskService.findById(task.getParentTaskId());
+        task.setParentTask(parent);
+      }
+
+      taskService.save(task);
+
+      return ResponseEntity.status(HttpStatus.CREATED)
+          .body("Tarea creada exitosamente.");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error al crear la tarea: " + e.getMessage());
+    }
+  }
+
+  @PutMapping("/{id}")
+  public ResponseEntity<?> updateTask(@PathVariable Long id, @Valid @RequestBody Task updatedTask) {
+    try {
+      Task existingTask = taskService.findById(id);
+      if (existingTask == null) {
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Tarea no encontrada.");
+      }
+
+      existingTask.setTitle(updatedTask.getTitle().trim());
+      existingTask.setTask(updatedTask.getTask().trim());
+      existingTask.setTaskType(updatedTask.getTaskType());
+      existingTask.setStatus(updatedTask.getStatus() != null ? updatedTask.getStatus() : TaskStatus.TODO);
+
+      // Manejar parentTask
+      if (updatedTask.getParentTaskId() != null) {
+        Task parent = taskService.findById(updatedTask.getParentTaskId());
+        existingTask.setParentTask(parent);
+      } else {
+        existingTask.setParentTask(null);
+      }
+
+      taskService.save(existingTask);
+
+      return ResponseEntity.ok("Tarea actualizada exitosamente.");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error al actualizar la tarea: " + e.getMessage());
+    }
+  }
+
+  @DeleteMapping("/{id}")
+  public ResponseEntity<?> deleteTask(@PathVariable Long id) {
+    try {
+      taskService.delete(id);
+      return ResponseEntity.ok("Tarea eliminada exitosamente.");
+    } catch (Exception e) {
+      return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+          .body("Error al eliminar la tarea: " + e.getMessage());
+    }
+  }
 }

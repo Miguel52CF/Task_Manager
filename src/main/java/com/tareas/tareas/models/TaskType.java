@@ -2,6 +2,7 @@ package com.tareas.tareas.models;
 
 import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tareas.tareas.base.BaseModel;
 
 import jakarta.persistence.Entity;
@@ -26,6 +27,7 @@ public class TaskType extends BaseModel {
 
   private String icon;
 
+  @JsonIgnore
   @OneToMany(mappedBy = "taskType")
   private List<Task> tasks;
 
