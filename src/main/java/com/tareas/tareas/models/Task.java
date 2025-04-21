@@ -2,7 +2,6 @@ package com.tareas.tareas.models;
 
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.tareas.tareas.base.BaseModel;
 import com.tareas.tareas.enums.TaskStatus;
 
@@ -40,7 +39,6 @@ public class Task extends BaseModel {
   @JoinColumn(name = "task_type_id", nullable = false)
   private TaskType taskType;
 
-  @JsonIgnore
   @ManyToOne
   @JoinColumn(name = "parent_task_id")
   private Task parentTask;

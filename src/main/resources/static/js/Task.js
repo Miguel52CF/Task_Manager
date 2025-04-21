@@ -22,6 +22,14 @@ function resetTaskForm() {
     "Crear Nueva Tarea";
 }
 
+const TASK_STATUS_META = {
+  TODO: { description: "Por hacer", color: "#007bff" },
+  IN_PROGRESS: { description: "En progreso", color: "#ffc107" },
+  ON_HOLD: { description: "En espera", color: "#6c757d" },
+  COMPLETED: { description: "Completada", color: "#28a745" },
+  CANCELLED: { description: "Cancelada", color: "#dc3545" },
+};
+
 // Load and render tasks
 async function loadTasks() {
   try {
@@ -47,8 +55,8 @@ async function loadTasks() {
         <td class="name">${task.title}</td>
         <td class="description">${task.task}</td>
         <td class="status">
-          <span class="badge" style="background-color: ${task.status.color}">
-            ${task.status}
+          <span class="badge" style="background-color: ${TASK_STATUS_META[task.status]?.color || '#6c757d'}">
+            ${TASK_STATUS_META[task.status]?.description || task.status}
           </span>
         </td>
         <td class="type">${task.taskType.name}</td>
@@ -304,10 +312,9 @@ async function openEditModal(id) {
     const tareaPadreTomSelect = document.getElementById("tareaPadre").tomselect;
 
     console.log("el Objecto", task);
-    
+
     console.log(tareaPadreTomSelect.options);
-    console.log("el id",task.parentTaskId);
-    
+    console.log("el id", task.parentTaskId);
 
     if (task.taskType?.id) {
       tipoTareaTomSelect.setValue(task.taskType.id);
@@ -316,17 +323,20 @@ async function openEditModal(id) {
     }
 
     if (task.parentTaskId) {
-      
     } else {
       tareaPadreTomSelect.clear();
     }
 
-    document.getElementById("crearTareaModalLabel").textContent = "Editar Tarea";
-    document.querySelector("#createTaskForm button[type='submit']").textContent = "Actualizar Tarea";
+    document.getElementById("crearTareaModalLabel").textContent =
+      "Editar Tarea";
+    document.querySelector(
+      "#createTaskForm button[type='submit']"
+    ).textContent = "Actualizar Tarea";
 
-    const modal = new bootstrap.Modal(document.getElementById("crearTareaModal"));
+    const modal = new bootstrap.Modal(
+      document.getElementById("crearTareaModal")
+    );
     modal.show();
-
   } catch (error) {
     console.error("Error:", error);
     Swal.fire("Error", error.message, "error");

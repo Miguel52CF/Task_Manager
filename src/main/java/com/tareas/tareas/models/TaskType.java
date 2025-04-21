@@ -31,10 +31,4 @@ public class TaskType extends BaseModel {
   @OneToMany(mappedBy = "taskType")
   private List<Task> tasks;
 
-  public TaskType(Long id, String name, String icon) {
-    this.setId(id);
-    this.name = name;
-    this.icon = icon;
-  }
-
 }
