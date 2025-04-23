@@ -31,7 +31,7 @@
       </p>
 
       <div class="row g-4">
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="card section-card h-100 shadow-sm">
             <div class="card-body">
               <h5 class="card-title">📋 Ver Tareas</h5>
@@ -43,7 +43,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <div class="col-md-6">
           <div class="card section-card h-100 shadow-sm">
             <div class="card-body">
               <h5 class="card-title">🏷️ Crear Categorías</h5>
@@ -55,7 +55,7 @@
             </div>
           </div>
         </div>
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
           <div class="card section-card h-100 shadow-sm">
             <div class="card-body">
               <h5 class="card-title">🧩 Ver Board</h5>
@@ -66,7 +66,7 @@
               <a href="/Board" class="btn btn-outline-primary">Ver Board</a>
             </div>
           </div>
-        </div>
+        </div> -->
       </div>
     </div>
 

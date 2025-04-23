@@ -77,9 +77,9 @@
         <li class="nav-item">
           <a class="nav-link" href="/taskTypes">Crear Categorías</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link" href="/Board">Ver Board</a>
-        </li>
+        </li> -->
       </ul>
       <button
         id="themeToggle"

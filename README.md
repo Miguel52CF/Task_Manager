@@ -61,7 +61,6 @@ Task_Manager/
 - Save tasks to a local database
 
 ### Future ideas (not confirmed):
-- Task types
 - Filters by date and priority
 - Task hierarchy with subtasks
 - Post-it style visual layout
@@ -96,5 +95,5 @@ Created by **📛化け猫**
 
 ## 📄 License
 
-This project is **open source** and can be freely used for personal or educational purposes. If you use or modify it, I’d appreciate it if you keep credit to the original author.  
-Thanks for respecting the shared effort and learning! 🙌
+This project is licensed under the [MIT License](LICENSE).  
+Feel free to use it for personal or educational purposes. If you share or modify it, please keep credit to the original author. 🙌
